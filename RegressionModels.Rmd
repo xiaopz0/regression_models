@@ -1,0 +1,39 @@
+---
+title: "RegressionModels"
+author: "xiao"
+date: "August 16, 2015"
+output: html_document
+---
+## executive summary
+You work for Motor Trend, a magazine about the automobile industry. Looking at a data set of a collection of cars, they are interested in exploring the relationship between a set of variables and miles per gallon (MPG) (outcome). They are particularly interested in the following two questions:
+
+Is an automatic or manual transmission better for MPG
+
+Quantify the MPG difference between automatic and manual transmissions
+
+From the following analysis, we can see manual (1) is better for MPG, from the exploratory analysis, the boxplot and the t-stats both shows that the difference is more than one standard deviation.
+
+## Some Exploratory Analysis
+
+### 1. Is an automatic or manual transmission better for MPG
+```{r}
+library(ggplot2)
+qplot(factor(am), mpg, data = mtcars, geom = "boxplot")
+```
+
+
+### 2. Quantify the MPG difference between automatic and manual transmissions
+```{r}
+myMean = tapply(mtcars$mpg, mtcars$am, mean)
+myStd = tapply(mtcars$mpg, mtcars$am, sd)
+(myMean[1]-myMean[2])/myStd[1]
+(myMean[1]-myMean[2])/myStd[2]
+```
+
+## Regression Analysis
+From the following result, we can see that the regression shows am (whether the car is automatic or manual) is a significant predictor of mpg. The P-Value for factor(am)1 is smaller than 5%. The residual of this result seems random, there isn't an obvious trend that am fails to predict.
+```{r}
+myModel = lm(formula = mpg~factor(am), data=mtcars)
+summary(myModel)
+plot(myModel$residuals)
+```
